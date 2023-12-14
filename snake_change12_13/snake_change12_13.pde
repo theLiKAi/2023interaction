@@ -5,7 +5,7 @@ import gifAnimation.*;
 int startTime;  // 計時器開始時間
 int elapsedTime;  // 過去的時間
 int Time;//計算現在
-int rego=4;//可暫停三次
+int rego=6;//可暫停五次
 //場景
 int stage=0;
 
@@ -125,7 +125,7 @@ void setup() {
   // 載入GIF文件
   start = new Gif(this, "start.gif");
   start.play();
-  
+
   startTime = millis();  // 初始化計時器
 }
 
@@ -136,11 +136,10 @@ void draw() {
   PImage P_btn2U = btn2.get(156, 382, 287, 90);
   PImage P_btn1D = btn1.get(156, 544, 287, 90);
   PImage P_btn2D = btn2.get(156, 544, 287, 90);
-  
-    // 計算經過的時間
+
+  // 計算經過的時間
   elapsedTime = millis() - startTime;
   Time=elapsedTime/1000;
-
   if (stage==0)
   {
     image(start, 0, 0);
@@ -156,13 +155,17 @@ void draw() {
     } else {
       image(P_btn1D, 156, 544);
     }
-  } else if ( stage==2)
+  } 
+  
+  else if ( stage==2)
   {
 
     image(P_btn2U, 156, 382);
     image(P_btn1D, 156, 544);
     stage=3;
-  } else if (stage==3)
+    }
+    
+    else if (stage==3)
   {
 
     if (!gameStarted) {
@@ -182,49 +185,9 @@ void draw() {
         background(backgroundColor);
         noStroke();
 
-        // 當方向鍵被按下時
-        if (keyPressed && key == CODED) {
-          switch(keyCode) {
-          case LEFT:
-            if (snakeDirection != 'R') {
-              snakeDirection = 'L';
-            }
-            break;
-          case RIGHT:
-            if (snakeDirection != 'L') {
-              snakeDirection = 'R';
-            }
-            break;
-          case DOWN:
-            if (snakeDirection != 'U') {
-              snakeDirection = 'D';
-            }
-            break;
-          case UP:
-            if (snakeDirection != 'D') {
-              snakeDirection = 'U';
-            }
-            break;
-          }
+       snakemove();
         }
 
-        // 依照上面方向鍵按下時所得到的方向，控制蛇頭的方向
-        switch(snakeDirection) {
-        case 'L':
-          snakeHeadX -= w;
-          break;
-        case 'R':
-          snakeHeadX += w;
-          break;
-        case 'D':
-          snakeHeadY += w;
-          break;
-        case 'U':
-          snakeHeadY -= w;
-          break;
-        }
-        drawSnake();
-      }
 
       fill(0); // 設置填充顏色為黑色
       rect(-10, 600, 700, 600);
@@ -261,7 +224,8 @@ void draw() {
       }
       stage1Clear();
     }
-  } else if (stage==4)
+}
+   else if (stage==4)
   {
 
     frameRate(60);
@@ -277,48 +241,7 @@ void draw() {
         background(backgroundColor);
         noStroke();
 
-        // 當方向鍵被按下時
-        if (keyPressed && key == CODED) {
-          switch(keyCode) {
-          case LEFT:
-            if (snakeDirection != 'R') {
-              snakeDirection = 'L';
-            }
-            break;
-          case RIGHT:
-            if (snakeDirection != 'L') {
-              snakeDirection = 'R';
-            }
-            break;
-          case DOWN:
-            if (snakeDirection != 'U') {
-              snakeDirection = 'D';
-            }
-            break;
-          case UP:
-            if (snakeDirection != 'D') {
-              snakeDirection = 'U';
-            }
-            break;
-          }
-        }
-
-        // 依照上面方向鍵按下時所得到的方向，控制蛇頭的方向
-        switch(snakeDirection) {
-        case 'L':
-          snakeHeadX -= w;
-          break;
-        case 'R':
-          snakeHeadX += w;
-          break;
-        case 'D':
-          snakeHeadY += w;
-          break;
-        case 'U':
-          snakeHeadY -= w;
-          break;
-        }
-        drawSnake();
+        snakemove();
       }
 
       fill(0); // 設置填充顏色為黑色
@@ -346,10 +269,17 @@ void draw() {
         kg=kg+0.1000;
         kg = round(kg * 10) / 10.0; // 四捨五入到一位小數
         eatItem =true;
+      fill(255);
+      textSize(40);
+      textAlign(CENTER, CENTER);
+      text("暫停時間:"+Time, 400, 650);
+      text("暫停次數:" +(rego-1), 400, 725);
       }
       stage2Clear();
     }
-  } else if (stage==5)
+  }
+ 
+  else if (stage==5)
   {
     frameRate(12);
     listenGameOver();
@@ -365,47 +295,72 @@ void draw() {
         noStroke();
 
         // 當方向鍵被按下時
-        if (keyPressed && key == CODED) {
-          switch(keyCode) {
-          case LEFT:
-            if (snakeDirection != 'R') {
-              snakeDirection = 'L';
-            }
-            break;
-          case RIGHT:
-            if (snakeDirection != 'L') {
-              snakeDirection = 'R';
-            }
-            break;
-          case DOWN:
-            if (snakeDirection != 'U') {
-              snakeDirection = 'D';
-            }
-            break;
-          case UP:
-            if (snakeDirection != 'D') {
-              snakeDirection = 'U';
-            }
-            break;
-          }
+        snakemove();
         }
+      
 
-        // 依照上面方向鍵按下時所得到的方向，控制蛇頭的方向
-        switch(snakeDirection) {
-        case 'L':
-          snakeHeadX -= w;
-          break;
-        case 'R':
-          snakeHeadX += w;
-          break;
-        case 'D':
-          snakeHeadY += w;
-          break;
-        case 'U':
-          snakeHeadY -= w;
-          break;
-        }
-        drawSnake();
+      fill(0); // 設置填充顏色為黑色
+      rect(-10, 600, 700, 600);
+      //箱子
+      fill(#3379F0);
+      rect(-10, 0, 700, 285);
+      rect(-10, 315, 700, 280);
+      //打字
+      fill(0);
+      textSize(30);
+      //要打的字
+      text(typing, 400, 100);
+
+      /*fill(255,0,0);
+       if(ID< typing.length()) text(typed+typing.charAt(ID),400,150);
+       */
+      fill(0);
+      text(typed, 400, 150);
+      //下面數值
+      fill(255);
+      textSize(40);
+      textAlign(CENTER, CENTER);
+      text("kg:"+stage, 90, 650);
+      text("difficulty:"+ID, 125, 725);
+      text("暫停時間:"+Time, 400, 650);
+      text("暫停次數:" +(rego-1), 400, 725);
+      // 畫一個道具
+      // @600, @600 是指畫布的寬高
+      drawItem();
+      // 繪製障礙物
+      drawObstacles();
+      // 繪製消除障礙物
+      drawStar();
+      // 如果蛇吃了道具
+      eatItem();
+      //障礙物
+      generateS5Obstacles1();
+      generateS5Obstacles2();
+      //要打的字
+      //打完字消除障礙物
+      if (ID==8) {
+        obstacles.clear();
+        Obstacles=0;
+      }
+      stage3Clear();
+    }
+  }
+  else if (stage==6)
+  {
+    frameRate(12);
+    listenGameOver();
+    if (gameStarted) {
+
+      // 每一幀都要判斷：蛇是不是掛了？
+      if ( isSnakeDie2() ) {
+        return;
+      }
+      if (snakeMoving) {
+        // 填滿畫布背景顏色
+        background(backgroundColor);
+        noStroke();
+
+        snakemove();
       }
 
       fill(0); // 設置填充顏色為黑色
@@ -427,10 +382,12 @@ void draw() {
       text(typed, 400, 150);
       //下面數值
       fill(255);
-      textSize(48);
+      textSize(40);
       textAlign(CENTER, CENTER);
-      text("kg:"+Time, 90, 650);
+      text("kg:"+stage, 90, 650);
       text("difficulty:"+ID, 125, 725);
+      text("暫停時間:"+Time, 400, 650);
+      text("暫停次數:" +(rego-1), 400, 725);
       // 畫一個道具
       // @600, @600 是指畫布的寬高
       drawItem();
@@ -440,23 +397,146 @@ void draw() {
       drawStar();
       // 如果蛇吃了道具
       eatItem();
+      //障礙物
       generateS5Obstacles1();
       generateS5Obstacles2();
-      
+      //要打的字
       //打完字消除障礙物
-      if (ID==20) {
+      if (ID==2) {
         obstacles.clear();
         Obstacles=0;
-        Time=12;
       }
-      /*if ( snakeHeadX >=485 && snakeHeadX <=500 && snakeHeadY >=285 && snakeHeadY <=300) {
-       kg=kg+0.1000;
-       kg = round(kg * 10) / 10.0; // 四捨五入到一位小數
-       }
-       */
+      stage4Clear();
     }
   }
+    else if (stage==7)
+  {
+    frameRate(12);
+    listenGameOver();
+    if (gameStarted) {
 
+      // 每一幀都要判斷：蛇是不是掛了？
+      if ( isSnakeDie2() ) {
+        return;
+      }
+      if (snakeMoving) {
+        // 填滿畫布背景顏色
+        background(backgroundColor);
+        noStroke();
+
+        snakemove();
+      }
+
+      fill(0); // 設置填充顏色為黑色
+      rect(-10, 600, 700, 600);
+      //箱子
+      fill(#3379F0);
+      rect(-10, 0, 700, 285);
+      rect(-10, 315, 700, 280);
+      //打字
+      fill(0);
+      textSize(30);
+      //要打的字
+      text(typing, 400, 100);
+
+      /*fill(255,0,0);
+       if(ID< typing.length()) text(typed+typing.charAt(ID),400,150);
+       */
+      fill(0);
+      text(typed, 400, 150);
+      //下面數值
+      fill(255);
+      textSize(40);
+      textAlign(CENTER, CENTER);
+      text("kg:"+stage, 90, 650);
+      text("difficulty:"+ID, 125, 725);
+      text("暫停時間:"+Time, 400, 650);
+      text("暫停次數:" +(rego-1), 400, 725);
+      // 畫一個道具
+      // @600, @600 是指畫布的寬高
+      drawItem();
+      // 繪製障礙物
+      drawObstacles();
+      // 繪製消除障礙物
+      drawStar();
+      // 如果蛇吃了道具
+      eatItem();
+      //障礙物
+      generateS5Obstacles1();
+      generateS5Obstacles2();
+      //要打的字
+      //打完字消除障礙物
+      if (ID==11) {
+        obstacles.clear();
+        Obstacles=0;
+      }
+      stage5Clear();
+    }
+  }
+   else if (stage==8)
+  {
+    frameRate(12);
+    listenGameOver();
+    if (gameStarted) {
+
+      // 每一幀都要判斷：蛇是不是掛了？
+      if ( isSnakeDie2() ) {
+        return;
+      }
+      if (snakeMoving) {
+        // 填滿畫布背景顏色
+        background(backgroundColor);
+        noStroke();
+
+        snakemove();
+      }
+
+      fill(0); // 設置填充顏色為黑色
+      rect(-10, 600, 700, 600);
+      //箱子
+      fill(#3379F0);
+      rect(-10, 0, 700, 285);
+      rect(-10, 315, 700, 280);
+      //打字
+      fill(0);
+      textSize(30);
+      //要打的字
+      text(typing, 400, 100);
+
+      /*fill(255,0,0);
+       if(ID< typing.length()) text(typed+typing.charAt(ID),400,150);
+       */
+      fill(0);
+      text(typed, 400, 150);
+      //下面數值
+      fill(255);
+      textSize(40);
+      textAlign(CENTER, CENTER);
+      text("kg:"+stage, 90, 650);
+      text("difficulty:"+ID, 125, 725);
+      text("暫停時間:"+Time, 400, 650);
+      text("暫停次數:" +(rego-1), 400, 725);
+      // 畫一個道具
+      // @600, @600 是指畫布的寬高
+      drawItem();
+      // 繪製障礙物
+      drawObstacles();
+      // 繪製消除障礙物
+      drawStar();
+      // 如果蛇吃了道具
+      eatItem();
+      //障礙物
+      generateS5Obstacles1();
+      generateS5Obstacles2();
+      //要打的字
+      //打完字消除障礙物
+      if (ID==15) {
+        obstacles.clear();
+        Obstacles=0;
+      }
+      stage6Clear();
+    }
+  }
   // 繪製按鈕
   /*if (rectOver) {
    fill(rectHighlight);
@@ -503,6 +583,7 @@ void draw() {
    }
    */
 
+//挑戰模式
 
   else if (stage==1)
   {
@@ -520,49 +601,7 @@ void draw() {
         // 填滿畫布背景顏色
         background(backgroundColor);
         noStroke();
-
-        // 當方向鍵被按下時
-        if (keyPressed && key == CODED) {
-          switch(keyCode) {
-          case LEFT:
-            if (snakeDirection != 'R') {
-              snakeDirection = 'L';
-            }
-            break;
-          case RIGHT:
-            if (snakeDirection != 'L') {
-              snakeDirection = 'R';
-            }
-            break;
-          case DOWN:
-            if (snakeDirection != 'U') {
-              snakeDirection = 'D';
-            }
-            break;
-          case UP:
-            if (snakeDirection != 'D') {
-              snakeDirection = 'U';
-            }
-            break;
-          }
-        }
-
-        // 依照上面方向鍵按下時所得到的方向，控制蛇頭的方向
-        switch(snakeDirection) {
-        case 'L':
-          snakeHeadX -= w;
-          break;
-        case 'R':
-          snakeHeadX += w;
-          break;
-        case 'D':
-          snakeHeadY += w;
-          break;
-        case 'U':
-          snakeHeadY -= w;
-          break;
-        }
-        drawSnake();
+        snakemove();
       }
 
       fill(0); // 設置填充顏色為黑色
@@ -663,20 +702,23 @@ void draw() {
 
 void mousePressed() {
   // 檢查滑鼠是否點擊了按鈕
-  if (S_button1( btn1X, btn1Y, btn1W, btn1H)) {
-    currentColor = rectColor;
-    stage=2;
-    noCursor();
-    snakeHeadX = 300;
-    snakeHeadY = 300;
-  }
-  if (S_button2( btn2X, btn2Y, btn2W, btn2H)) {
-    currentColor = rectColor;
-    stage=1;
-    if (stage==1) {
-      gameStarted = true; // 遊戲開始
-      // 初始化遊戲狀態，生成蛇和食物等
+  if (stage==0)
+  {
+    if (S_button1( btn1X, btn1Y, btn1W, btn1H)) {
+      currentColor = rectColor;
+      stage=2;
       noCursor();
+      snakeHeadX = 300;
+      snakeHeadY = 300;
+    }
+    if (S_button2( btn2X, btn2Y, btn2W, btn2H)) {
+      currentColor = rectColor;
+      stage=1;
+      if (stage==1) {
+        gameStarted = true; // 遊戲開始
+        // 初始化遊戲狀態，生成蛇和食物等
+        noCursor();
+      }
     }
   }
 }
@@ -732,6 +774,53 @@ void drawSnake() {
     }
     rect(x[i], y[i], w, h);
   }
+}
+
+//蛇移動
+void snakemove()
+{
+// 當方向鍵被按下時
+        if (keyPressed && key == CODED) {
+          switch(keyCode) {
+          case LEFT:
+            if (snakeDirection != 'R') {
+              snakeDirection = 'L';
+            }
+            break;
+          case RIGHT:
+            if (snakeDirection != 'L') {
+              snakeDirection = 'R';
+            }
+            break;
+          case DOWN:
+            if (snakeDirection != 'U') {
+              snakeDirection = 'D';
+            }
+            break;
+          case UP:
+            if (snakeDirection != 'D') {
+              snakeDirection = 'U';
+            }
+            break;
+          }
+        }
+
+        // 依照上面方向鍵按下時所得到的方向，控制蛇頭的方向
+        switch(snakeDirection) {
+        case 'L':
+          snakeHeadX -= w;
+          break;
+        case 'R':
+          snakeHeadX += w;
+          break;
+        case 'D':
+          snakeHeadY += w;
+          break;
+        case 'U':
+          snakeHeadY -= w;
+          break;
+        }
+        drawSnake();
 }
 
 // 畫個食物
@@ -811,12 +900,12 @@ void listenGameOver() {
     stone=1;
     starExists = false;
     kg=0;
+    rego=6;
   }
 }
 
 // 顯示遊戲結束畫面
 void showGameOver() {
-
   // 將目前的座標矩陣壓入堆疊
   pushMatrix();
 
@@ -877,7 +966,7 @@ void generateS5Obstacles1() {
   int obstacleX = int (510);
   int obstacleY = int (285);
 
- // 加入有效的障礙物座標到清單中
+  // 加入有效的障礙物座標到清單中
   int[] obstacle = {obstacleX, obstacleY};
   obstacles.add(obstacle);
   Obstacles++;
@@ -887,7 +976,7 @@ void generateS5Obstacles2() {
   int obstacleX = int (510);
   int obstacleY = int (300);
 
- // 加入有效的障礙物座標到清單中
+  // 加入有效的障礙物座標到清單中
   int[] obstacle = {obstacleX, obstacleY};
   obstacles.add(obstacle);
   Obstacles++;
@@ -1012,102 +1101,194 @@ void stage2Clear()
   }
 }
 
-//打字
-String typing="printf is a function";
-String typed="";
-int ID = 0;
-boolean [] pressed = new boolean[26];
-void keyPressed() {
-  if (ID< typing.length()  &&  key==typing.charAt(ID)) {
-    if (key>='a'&&key<='z') {
-      pressed[key-'a'] = true;
-      typed+=key;
-      ID++;
-    } else if (key==' ') {
-      typed+=key;
-      ID++;
-    } else {
-      background(255, 0, 0);
-    }
-  }
-  
-  
-  if(eatItem)
-  {
-    if (key == CODED && keyCode == SHIFT) {
-    // 在按下 Shift 鍵時觸發的事件
-    startTime = millis();
-    snakeMoving = false;
-    eatItem=false;
-    rego--;
-     }
-  }
-  
-}
-void keyReleased() {
-  if (key>='a'&&key<='z') pressed[key-'a'] = false;
-}
-
-void eatItem()
+void stage3Clear()
 {
-  if(Time==5)
+  if (snakeHeadX>=600 && snakeHeadY>=275&&snakeHeadY<=315)
   {
-    snakeMoving=true;
-    eatItem=true;
+    stage=6;
+    snakeHeadX=-15;
+    if (snakeHeadY>=275&&snakeHeadY<300)
+    {
+      snakeHeadY=285;
+    } else if (snakeHeadY>=300&&snakeHeadY<=315) snakeHeadY=300;
+
+    if (ID==8)
+    {
+      typing="me";
+      typed="";
+      ID = 0;
+    }
   }
+  
+}
+void stage4Clear()
+{
+  if (snakeHeadX>=600 && snakeHeadY>=275&&snakeHeadY<=315)
+  {
+    stage=7;
+    snakeHeadX=-15;
+    if (snakeHeadY>=275&&snakeHeadY<300)
+    {
+      snakeHeadY=285;
+    } else if (snakeHeadY>=300&&snakeHeadY<=315) snakeHeadY=300;
+
+    if (ID==2)
+    {
+      typing="you are gay";
+      typed="";
+      ID = 0;
+    }
+  }
+  
+}
+void stage5Clear()
+{
+  if (snakeHeadX>=600 && snakeHeadY>=275&&snakeHeadY<=315)
+  {
+    stage=8;
+    snakeHeadX=-15;
+    if (snakeHeadY>=275&&snakeHeadY<300)
+    {
+      snakeHeadY=285;
+    } else if (snakeHeadY>=300&&snakeHeadY<=315) snakeHeadY=300;
+
+    if (ID==11)
+    {
+      typing="a beautiful day";
+      typed="";
+      ID = 0;
+    }
+  }
+  
+}
+void stage6Clear()
+{
+  if (snakeHeadX>=600 && snakeHeadY>=275&&snakeHeadY<=315)
+  {
+    stage=9;
+    snakeHeadX=-15;
+    if (snakeHeadY>=275&&snakeHeadY<300)
+    {
+      snakeHeadY=285;
+    } else if (snakeHeadY>=300&&snakeHeadY<=315) snakeHeadY=300;
+
+    if (ID==15)
+    {
+      typing="nothing";
+      typed="";
+      ID = 0;
+    }
+  }
+  
 }
 
+  //打字
+  String typing="go snake";
+  String typed="";
+  int ID = 0;
+  boolean [] pressed = new boolean[26];
+  void keyPressed() {
+    if (ID< typing.length()  &&  key==typing.charAt(ID)) {
+      if (key>='a'&&key<='z') {
+        pressed[key-'a'] = true;
+        typed+=key;
+        ID++;
+      } else if (key==' ') {
+        typed+=key;
+        ID++;
+      } else {
+        background(255, 0, 0);
+      }
+    }
 
 
-
-boolean isSnakeDie() {
-  // 撞墙了
-  if ( snakeHeadX < 15 || snakeHeadX >= 585 || snakeHeadY < 30 || snakeHeadY >= 570) {
-    showGameOver();
-    return true;
-  }
-
-  // 自己吃自己
-  if ( snakeLength > 2 ) {
-    for ( int i=1; i<snakeLength; i++ ) {
-      if ( snakeHeadX == x[i] && snakeHeadY == y[i] ) {
-        showGameOver();
-        return true;
+    if (eatItem)
+    {
+      if (key == CODED && keyCode == SHIFT) {
+        // 在按下 Shift 鍵時觸發的事件
+        startTime = millis();
+        snakeMoving = false;
+        eatItem=false;
+        rego--;
+        for (int i = 0; i < snakeLength; i++) {
+          if (i == 0) {
+            fill(#AFAFAF);
+          } else {
+            fill(#C4BEBE);
+          }
+          rect(x[i], y[i], w, h);
+        }
       }
     }
   }
-  if (checkObstacleCollision()) {
-    showGameOver();
-    return true;
+  void keyReleased() {
+    if (key>='a'&&key<='z') pressed[key-'a'] = false;
   }
 
-  return false;
-}
-
-// 蛇死了麼？
-boolean isSnakeDie2() {
-  // 撞墙了
-  if ( snakeHeadX <-15 || snakeHeadX >= 600 || snakeHeadY <270 || snakeHeadY > 315) {
-    showGameOver();
-    return true;
-  }
-
-  // 自己吃自己
-  if ( snakeLength > 2 ) {
-    for ( int i=1; i<snakeLength; i++ ) {
-      if ( snakeHeadX == x[i] && snakeHeadY == y[i] ) {
-        showGameOver();
-        return true;
-      }
+  void eatItem()
+  {
+    if (Time==5)
+    {
+      snakeMoving=true;
+      eatItem=true;
     }
   }
-  if (checkObstacleCollision()) {
-    showGameOver();
-    return true;
+
+
+
+
+  boolean isSnakeDie() {
+    // 撞墙了
+    if ( snakeHeadX < 15 || snakeHeadX >= 585 || snakeHeadY < 30 || snakeHeadY >= 570) {
+      showGameOver();
+      return true;
+    }
+
+    // 自己吃自己
+    if ( snakeLength > 2 ) {
+      for ( int i=1; i<snakeLength; i++ ) {
+        if ( snakeHeadX == x[i] && snakeHeadY == y[i] ) {
+          showGameOver();
+          return true;
+        }
+      }
+    }
+    if (checkObstacleCollision()) {
+      showGameOver();
+      return true;
+    }
+    if ( rego==0) {
+      showGameOver();
+      return true;
+    }
+
+    return false;
   }
-  if ( rego==0){
-    showGameOver();
-    return true;
+
+  // 蛇死了麼？
+  boolean isSnakeDie2() {
+    // 撞墙了
+    if ( snakeHeadX <-15 || snakeHeadX >= 600 || snakeHeadY <270 || snakeHeadY > 315) {
+      showGameOver();
+      return true;
+    }
+
+    // 自己吃自己
+    if ( snakeLength > 2 ) {
+      for ( int i=1; i<snakeLength; i++ ) {
+        if ( snakeHeadX == x[i] && snakeHeadY == y[i] ) {
+          showGameOver();
+          return true;
+        }
+      }
+    }
+    if (checkObstacleCollision()) {
+      showGameOver();
+      return true;
+    }
+    if ( rego==0) {
+      showGameOver();
+      return true;
+    }
+    return false;
   }
-  return false;
-}
